@@ -2,6 +2,12 @@
 
 this is case project for Job application to AdCreative.ai
 
+### Details for the case
+
+- [Github ](https://github.com/sahinkutlu/frontend-case/tree/main)
+- [Google Docs](https://docs.google.com/document/d/1WBbK7d7Ft3HE0qPyYmnV_uhyBdjdGBpB8rVId3L-bzs/edit?usp=sharing)
+- [Linkedin Case Details](https://www.linkedin.com/jobs/search/?currentJobId=3908558482&distance=25&f_TPR=r604800&geoId=102105699&keywords=react&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&start=25)
+
 ### Technologies Used
 
 - React
