@@ -5,8 +5,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 //pages
 import HomePage from "./pages/home-page";
+import Layout from "./pages/layout";
 
-const router = createBrowserRouter([{ path: "/", element: <HomePage /> }]);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [{ path: "", element: <HomePage /> }],
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
