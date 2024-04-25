@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCharacters } from "./fetchCharacters";
 import { useSearchParams } from "react-router-dom";
 import { getApiQuery } from "./getApiQuery";
+import SelectComponent from "../../components/select-component";
 
 const HomePage = () => {
-  const [searchParams] = useSearchParams();
-  const apiQuery = getApiQuery({ searchParams });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const apiQuery = getApiQuery({ searchParams, setSearchParams });
 
   const queryData = useQuery({
     queryKey: ["characters_data", apiQuery],
@@ -13,13 +14,9 @@ const HomePage = () => {
     staleTime: Infinity,
   });
 
-  if (queryData.isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
-      <h1 className="border w-full h-full">Home Page</h1>
+      <SelectComponent queryData={queryData} />
     </div>
   );
 };
