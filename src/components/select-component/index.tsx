@@ -43,7 +43,10 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
       {queryData.data?.info?.count || 0}
 
       {/* input */}
-      <div className="flex border p-1 rounded-xl w-[30rem] border-gray-700   ">
+      <div
+        className="flex border p-1 rounded-xl w-[30rem] border-gray-700   "
+        onFocus={() => setIsOpen(true)}
+      >
         <div className="flex flex-wrap gap-1 mr-1  ">
           {selectedNames.map((name) => (
             <div
@@ -86,22 +89,23 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
       {isOpen && (
         <div className="border   border-gray-700 rounded-xl mt-2 overflow-y-auto   max-h-80 w-[30rem] ">
           {queryData.data?.results.map((result) => (
-            <div
+            <button
               key={result.id}
-              className="border-y  px-3 py-2 flex gap-3  items-center justify-start cursor-pointer "
+              className="border-y  px-3 py-2 flex gap-3  items-center justify-start w-full cursor-pointer "
               onClick={() => handleCheckboxChange(result.name)}
             >
               <input
                 type="checkbox"
                 checked={selectedNames.includes(result.name)}
                 onChange={() => handleCheckboxChange(result.name)}
+                tabIndex={-1}
               />
               <img
                 src={result.image}
                 className="w-8 h-8 rounded-lg"
                 alt="character image"
               />
-              <div>
+              <div className="flex flex-col items-start justify-center">
                 <p>
                   {searchParams.get("name")
                     ? makeSearchBold(result.name)
@@ -111,7 +115,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
                   {result.episode.length} Episodes
                 </p>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
