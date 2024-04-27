@@ -37,7 +37,8 @@ multi-select autocomplete component
 - [x] Listelenen sonuclarda her bir karater icin karater resmi, ismi ve kac bolumde oynadigi bilgisinin gosterilmesi
 - [x] query icin yazilan sozcugun listelenen sonuclarda vurgulanmasi (ornek tasarimda 'ric' aramasi sonuclarinda 'Ric' bold seklinde gosterilmistir)
 - [x] secilen sonuclarin input alanina eklenmesi ve cikarilmasi
-- [ ] Keyboard navigation desteklenmeli. Yon tuslari ve tab kullanarak tum islemler yapilabilmeli, input alanindaki secili ogeler veya sonuc listesindeki satirlar gezinebilmeli ve silme/secme islemleri yapilabilmeli.
+- [x] Keyboard navigation desteklenmeli. Yon tuslari ve tab kullanarak tum islemler yapilabilmeli, input alanindaki secili ogeler veya sonuc listesindeki satirlar gezinebilmeli ve silme/secme islemleri yapilabilmeli.
+- [ ] arrow keys accesibility in dropdown menu
 - [ ] Loading state gosterimi
 - [ ] Exception handling ve error statelerinin arayuzde gosterilmesi
 - [ ] Ve tabi ki yazdiginiz kodun mimarisi, temiz ve okunakli olmasi belki de en onemli kriter olacaktir.
