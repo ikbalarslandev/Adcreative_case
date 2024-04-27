@@ -32,11 +32,11 @@ multi-select autocomplete component
 
 ### To Do:
 
-- [ ] Tasarima uygun multi-select implementasyonu
+- [x] Tasarima uygun multi-select implementasyonu
 - [x] input alanina yazilan query ile api sorgulanip popup content'de listelenmesi
 - [x] Listelenen sonuclarda her bir karater icin karater resmi, ismi ve kac bolumde oynadigi bilgisinin gosterilmesi
 - [x] query icin yazilan sozcugun listelenen sonuclarda vurgulanmasi (ornek tasarimda 'ric' aramasi sonuclarinda 'Ric' bold seklinde gosterilmistir)
-- [ ] secilen sonuclarin input alanina eklenmesi ve cikarilmasi
+- [x] secilen sonuclarin input alanina eklenmesi ve cikarilmasi
 - [ ] Keyboard navigation desteklenmeli. Yon tuslari ve tab kullanarak tum islemler yapilabilmeli, input alanindaki secili ogeler veya sonuc listesindeki satirlar gezinebilmeli ve silme/secme islemleri yapilabilmeli.
 - [ ] Loading state gosterimi
 - [ ] Exception handling ve error statelerinin arayuzde gosterilmesi
