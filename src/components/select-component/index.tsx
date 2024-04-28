@@ -3,12 +3,13 @@ import { IQueryData } from "../../types";
 import { useSearchParams } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa";
 import React, { useState, useEffect, useRef } from "react";
+import LoadingItem from "./components/loading";
 
 const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
   queryData,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const containerRef = useRef(null);
 
@@ -70,94 +71,103 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1 text-gray-500 " ref={containerRef}>
+    <div className="flex flex-col gap-1 text-gray-500   " ref={containerRef}>
       {queryData.data?.info?.count || 0}
 
-      {/* input */}
-      <div
-        className="flex border p-1 rounded-xl w-[30rem] border-gray-700   "
-        onFocus={() => setIsOpen(true)}
-      >
-        <div className="flex flex-wrap gap-1 mr-1  ">
-          {selectedNames.map((name) => (
-            <div
-              key={name}
-              className="bg-gray-300  px-2 py-1 rounded-lg  flex items-center gap-2 justify-center"
-            >
-              <p>{name}</p>
-              <button
-                onClick={() =>
-                  setSelectedNames(
-                    selectedNames.filter((item) => item !== name)
-                  )
-                }
-                className="bg-gray-600 text-white px-1 rounded"
+      <div className="relative">
+        {/* input */}
+        <div
+          className="flex border p-1 rounded-xl w-[30rem] border-gray-700"
+          onFocus={() => setIsOpen(true)}
+        >
+          <div className="flex flex-wrap gap-1 mr-1  ">
+            {selectedNames.map((name) => (
+              <div
+                key={name}
+                className="bg-gray-300  px-2 py-1 rounded-lg  flex items-center gap-2 justify-center"
               >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex  flex-1 items-center min-w-36 ">
-          <input
-            type="text"
-            className=" focus:ring-0 focus:outline-none w-full rounded-lg h-10 "
-            value={searchParams.get("name") || ""}
-            onChange={handleInputChange}
-            placeholder="Enter query..."
-            onClick={() => setIsOpen(!isOpen)}
-          />
-          <FaCaretDown
-            className="self-center mr-1"
-            size={22}
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        </div>
-      </div>
-
-      {/* drop down */}
-      {isOpen && (
-        <ul className="border border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 w-[30rem]">
-          {queryData.data?.results.map((result) => (
-            <li
-              key={result.id}
-              className="border-y px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
-              tabIndex={0}
-              onClick={() => handleCheckboxChange(result.name)}
-              onKeyDown={(e) => {
-                if (e.key === " " || e.key === "Enter") {
-                  handleCheckboxChange(result.name);
-                  e.preventDefault();
-                }
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={selectedNames.includes(result.name)}
-                onChange={() => handleCheckboxChange(result.name)}
-                tabIndex={-1}
-                onClick={(e) => e.stopPropagation()}
-              />
-              <img
-                src={result.image}
-                className="w-8 h-8 rounded-lg"
-                alt="character image"
-              />
-              <div className="flex flex-col items-start justify-center">
-                <p>
-                  {searchParams.get("name")
-                    ? makeSearchBold(result.name)
-                    : result.name}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {result.episode.length} Episodes
-                </p>
+                <p>{name}</p>
+                <button
+                  onClick={() =>
+                    setSelectedNames(
+                      selectedNames.filter((item) => item !== name)
+                    )
+                  }
+                  className="bg-gray-600 text-white px-1 rounded"
+                >
+                  X
+                </button>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </div>
+
+          <div className="flex  flex-1 items-center min-w-36 ">
+            <input
+              type="text"
+              className=" focus:ring-0 focus:outline-none w-full rounded-lg h-10 "
+              value={searchParams.get("name") || ""}
+              onChange={handleInputChange}
+              placeholder="Enter query..."
+              onClick={() => setIsOpen(!isOpen)}
+            />
+            <FaCaretDown
+              className="self-center mr-1"
+              size={22}
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          </div>
+        </div>
+        {/* drop down */}
+        {isOpen && (
+          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 w-[30rem] absolute  ">
+            {queryData.isLoading ? (
+              [...Array(7)].map((_, i) => <LoadingItem key={i} />)
+            ) : queryData.error ? (
+              <li className="border-y px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer">
+                <p>Couldn't find any data</p>
+              </li>
+            ) : (
+              queryData.data?.results.map((result) => (
+                <li
+                  key={result.id}
+                  className="border-y px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
+                  tabIndex={0}
+                  onClick={() => handleCheckboxChange(result.name)}
+                  onKeyDown={(e) => {
+                    if (e.key === " " || e.key === "Enter") {
+                      handleCheckboxChange(result.name);
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedNames.includes(result.name)}
+                    onChange={() => handleCheckboxChange(result.name)}
+                    tabIndex={-1}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <img
+                    src={result.image}
+                    className="w-8 h-8 rounded-lg"
+                    alt="character image"
+                  />
+                  <div className="flex flex-col items-start justify-center">
+                    <p>
+                      {searchParams.get("name")
+                        ? makeSearchBold(result.name)
+                        : result.name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {result.episode.length} Episodes
+                    </p>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
