@@ -29,6 +29,7 @@ multi-select autocomplete component
 - Accesibility
 - Loading state
 - Error Handling
+- infinite scroll
 
 ### To Do:
 
@@ -41,4 +42,5 @@ multi-select autocomplete component
 - [ ] arrow keys accesibility in dropdown menu
 - [ ] Loading state gosterimi
 - [ ] Exception handling ve error statelerinin arayuzde gosterilmesi
+- [ ] infinite scroll
 - [ ] Ve tabi ki yazdiginiz kodun mimarisi, temiz ve okunakli olmasi belki de en onemli kriter olacaktir.

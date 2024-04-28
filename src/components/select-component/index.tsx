@@ -2,7 +2,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { IQueryData } from "../../types";
 import { useSearchParams } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
   queryData,
@@ -10,10 +10,37 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
+  const containerRef = useRef(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({ name: e.target.value });
-  };
+  //dropdown menu logic
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (!isOpen) return;
+      let activeElement = document.activeElement as HTMLElement;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          const nextElement =
+            activeElement.nextElementSibling as HTMLElement | null;
+          if (nextElement) {
+            nextElement.focus();
+          }
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          const previousElement =
+            activeElement.previousElementSibling as HTMLElement | null;
+          if (previousElement) {
+            previousElement.focus();
+          }
+          break;
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
   const handleCheckboxChange = (name: string) => {
     if (selectedNames.includes(name)) {
       setSelectedNames(selectedNames.filter((item) => item !== name));
@@ -21,7 +48,6 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
       setSelectedNames([...selectedNames, name]);
     }
   };
-
   const makeSearchBold = (text: string) => {
     const index = text
       .toLowerCase()
@@ -38,8 +64,13 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
     );
   };
 
+  // search input logic
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ name: e.target.value });
+  };
+
   return (
-    <div className="flex flex-col gap-1 text-gray-500">
+    <div className="flex flex-col gap-1 text-gray-500 " ref={containerRef}>
       {queryData.data?.info?.count || 0}
 
       {/* input */}
@@ -87,18 +118,26 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
 
       {/* drop down */}
       {isOpen && (
-        <div className="border   border-gray-700 rounded-xl mt-2 overflow-y-auto   max-h-80 w-[30rem] ">
+        <ul className="border border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 w-[30rem]">
           {queryData.data?.results.map((result) => (
-            <button
+            <li
               key={result.id}
-              className="border-y  px-3 py-2 flex gap-3  items-center justify-start w-full cursor-pointer "
+              className="border-y px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
+              tabIndex={0}
               onClick={() => handleCheckboxChange(result.name)}
+              onKeyDown={(e) => {
+                if (e.key === " " || e.key === "Enter") {
+                  handleCheckboxChange(result.name);
+                  e.preventDefault();
+                }
+              }}
             >
               <input
                 type="checkbox"
                 checked={selectedNames.includes(result.name)}
                 onChange={() => handleCheckboxChange(result.name)}
                 tabIndex={-1}
+                onClick={(e) => e.stopPropagation()}
               />
               <img
                 src={result.image}
@@ -111,13 +150,13 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
                     ? makeSearchBold(result.name)
                     : result.name}
                 </p>
-                <p className="text-sm text-gray-500 ">
+                <p className="text-sm text-gray-500">
                   {result.episode.length} Episodes
                 </p>
               </div>
-            </button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );
