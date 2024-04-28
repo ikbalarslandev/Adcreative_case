@@ -71,13 +71,20 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1 text-gray-500   " ref={containerRef}>
-      {queryData.data?.info?.count || 0}
+    <div className="flex flex-col gap-1 text-gray-500">
+      <div className=" flex items-center justify-center mb-10  ">
+        <p className="bg-white px-2 py-1 rounded-lg  ">
+          <span className="text-black">
+            {queryData.data?.info?.count ?? "000"} {"  "}
+          </span>{" "}
+          Results Found
+        </p>
+      </div>
 
-      <div className="relative">
+      <div className="relative" ref={containerRef}>
         {/* input */}
         <div
-          className="flex border p-1 rounded-xl md:w-[30rem]  border-gray-700"
+          className="flex border p-1 rounded-xl md:w-[30rem]  border-gray-700 bg-white"
           onFocus={() => setIsOpen(true)}
         >
           <div className="flex flex-wrap gap-1 mr-1  ">
@@ -104,10 +111,10 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
           <div className="flex  flex-1 items-center min-w-36 ">
             <input
               type="text"
-              className=" focus:ring-0 focus:outline-none w-full rounded-lg h-10 "
+              className=" focus:ring-0 focus:outline-none w-full rounded-lg h-10 text-black "
               value={searchParams.get("name") || ""}
               onChange={handleInputChange}
-              placeholder="Enter query..."
+              placeholder="Search by name ..."
               onClick={() => setIsOpen(!isOpen)}
             />
             <FaCaretDown
@@ -119,7 +126,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
         </div>
         {/* drop down */}
         {isOpen && (
-          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 md:w-[30rem] w-full absolute  ">
+          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 md:w-[30rem] w-full absolute bg-white ">
             {queryData.isLoading ? (
               [...Array(7)].map((_, i) => <LoadingItem key={i} />)
             ) : queryData.error ? (
