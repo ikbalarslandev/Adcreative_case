@@ -77,7 +77,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
       <div className="relative">
         {/* input */}
         <div
-          className="flex border p-1 rounded-xl w-[30rem] border-gray-700"
+          className="flex border p-1 rounded-xl md:w-[30rem]  border-gray-700"
           onFocus={() => setIsOpen(true)}
         >
           <div className="flex flex-wrap gap-1 mr-1  ">
@@ -119,7 +119,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
         </div>
         {/* drop down */}
         {isOpen && (
-          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 w-[30rem] absolute  ">
+          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 md:w-[30rem] w-full absolute  ">
             {queryData.isLoading ? (
               [...Array(7)].map((_, i) => <LoadingItem key={i} />)
             ) : queryData.error ? (

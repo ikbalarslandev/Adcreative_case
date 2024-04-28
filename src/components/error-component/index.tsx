@@ -30,10 +30,11 @@ class ErrorComponent extends Component<
       return (
         <div className="w-full min-h-screen flex items-center justify-center">
           <h2>
-            Bu Sayfada birşeyler ters gitti ana sayfaya dönmek için{" "}
+            Something went wrong{" "}
             <Link to="/" className="text-blue-700">
-              Buraya Tıkla
+              Click here
             </Link>{" "}
+            to go back to the home page
           </h2>
         </div>
       );

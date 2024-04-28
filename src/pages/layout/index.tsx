@@ -8,7 +8,7 @@ const Layout = () => {
     <div className="flex flex-col overflow-hidden">
       <ErrorComponent>
         <HeaderComponent />
-        <section className="h-[85vh] py-10 px-2 md:py-28 md:px-60  flex flex-col items-center justify-center">
+        <section className="h-[85vh] py-10 px-2 md:py-28 md:px-60  flex flex-col md:items-center ">
           <Outlet />
         </section>
         <FooterComponent />

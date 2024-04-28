@@ -23,9 +23,9 @@ multi-select autocomplete component
 
 ### Features:
 
-- Component should be responsive
+- Responsive Design
 - Multi Select functionality
-- add new choosen and delete choosen character
+- Add new choosen and delete choosen character
 - Accesibility
 - Loading state
 - Error Handling
@@ -40,6 +40,7 @@ multi-select autocomplete component
 - [x] secilen sonuclarin input alanina eklenmesi ve cikarilmasi
 - [x] Keyboard navigation desteklenmeli. Yon tuslari ve tab kullanarak tum islemler yapilabilmeli, input alanindaki secili ogeler veya sonuc listesindeki satirlar gezinebilmeli ve silme/secme islemleri yapilabilmeli.
 - [x] Loading state gosterimi
-- [ ] Exception handling ve error statelerinin arayuzde gosterilmesi
+- [x] Exception handling ve error statelerinin arayuzde gosterilmesi
+- [x] Responsive design
 - [ ] infinite scroll
 - [ ] Ve tabi ki yazdiginiz kodun mimarisi, temiz ve okunakli olmasi belki de en onemli kriter olacaktir.
