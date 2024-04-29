@@ -19,6 +19,7 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [localCacheData, setLocalCacheData] = useState<IResult[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
   const [maxPage, setMaxPage] = useState<number>(0);
   const containerRef = useRef(null);
 
@@ -126,19 +127,19 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
     if (queryData.data?.info?.pages) {
       setMaxPage(queryData.data.info.pages);
     }
-
     if (queryData.data?.results) {
-      const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current!;
-      const scrollPosition = scrollTop + clientHeight;
       setLocalCacheData((prevData) => [...prevData, ...queryData.data.results]);
+    }
+
+    if (dropdownRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current;
+      const scrollPosition = scrollTop + clientHeight;
       setIsFetching(false);
       if (scrollPosition < scrollHeight) {
-        dropdownRef.current?.scrollTo({ top: scrollPosition });
+        dropdownRef.current.scrollTo({ top: scrollPosition });
       }
     }
   }, [queryData.data]);
-
-  const [isFetching, setIsFetching] = useState(false);
 
   return (
     <div className="flex flex-col gap-1 text-gray-500">
