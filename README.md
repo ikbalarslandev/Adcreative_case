@@ -16,7 +16,6 @@ this is case project for Job application to AdCreative.ai
 - axios
 - react Query
 - lodash
-- redux
 - [Rick and Morty Api](https://rickandmortyapi.com/documentation/#introduction)
 
 ## Project Details
@@ -43,5 +42,6 @@ multi-select autocomplete component
 - [x] Loading state gosterimi
 - [x] Exception handling ve error statelerinin arayuzde gosterilmesi
 - [x] Responsive design
-- [ ] infinite scroll
-- [ ] Ve tabi ki yazdiginiz kodun mimarisi, temiz ve okunakli olmasi belki de en onemli kriter olacaktir.
+- [x] infinite scroll
+- [x] Ve tabi ki yazdiginiz kodun mimarisi, temiz ve okunakli olmasi belki de en onemli kriter olacaktir.
+- [ ] infinite scroll, when new data fetched don't scroll to top.
