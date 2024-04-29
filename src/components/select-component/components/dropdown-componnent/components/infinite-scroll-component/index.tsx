@@ -33,21 +33,25 @@ const DropdownWrapper = ({
   setLocalCacheData,
 }: DropdownWrapperProps) => {
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const handleScroll = () => {
+    if (!dropdownRef.current || isFetching) return;
+    const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current;
+
+    const scrolledFromTop = scrollTop + clientHeight;
+
+    const totalHeight = scrollHeight;
+
+    const threshold = totalHeight * 0.8;
+
+    if (scrolledFromTop >= threshold) {
+      setPageQuery((prev) => prev + 1);
+      setIsFetching(true);
+    }
+  };
+
   const debounceScroll = useRef(
     debounce(() => {
-      if (!dropdownRef.current || isFetching) return;
-      const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current;
-
-      const scrolledFromTop = scrollTop + clientHeight;
-
-      const totalHeight = scrollHeight;
-
-      const threshold = totalHeight * 0.8;
-
-      if (scrolledFromTop >= threshold) {
-        setPageQuery((prev) => prev + 1);
-        setIsFetching(true);
-      }
+      handleScroll();
     }, 200)
   );
 

@@ -1,5 +1,5 @@
 import { IResult } from "../../../../../../types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface DropdownItemProps {
   result: IResult;
@@ -16,33 +16,44 @@ const DropdownItem = ({
   isOpen,
   setSelectedNames,
 }: DropdownItemProps) => {
+  const listItemRef = useRef<HTMLLIElement>(null);
+
   useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (!isOpen) return;
-      let activeElement = document.activeElement as HTMLElement;
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const listItem = listItemRef.current;
+      if (!listItem) return;
+
+      const listItems = Array.from(
+        listItem.parentElement?.querySelectorAll("li") || []
+      );
+      const currentIndex = listItems.indexOf(listItem);
 
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          const nextElement =
-            activeElement.nextElementSibling as HTMLElement | null;
-          if (nextElement) {
-            nextElement.focus();
+          if (currentIndex < listItems.length - 1) {
+            listItems[currentIndex + 1].focus();
           }
           break;
         case "ArrowUp":
           e.preventDefault();
-          const previousElement =
-            activeElement.previousElementSibling as HTMLElement | null;
-          if (previousElement) {
-            previousElement.focus();
+          if (currentIndex > 0) {
+            listItems[currentIndex - 1].focus();
           }
           break;
-      }
-    }
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+        default:
+          break;
+      }
+    };
+
+    listItemRef.current?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      listItemRef.current?.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen]);
 
   const handleCheckboxChange = (name: string) => {
@@ -71,6 +82,7 @@ const DropdownItem = ({
 
   return (
     <li
+      ref={listItemRef}
       className="border-y border-gray-300 px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
       tabIndex={0}
       onClick={() => handleCheckboxChange(result.name)}
