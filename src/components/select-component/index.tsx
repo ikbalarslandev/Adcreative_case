@@ -91,7 +91,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
             {selectedNames.map((name) => (
               <div
                 key={name}
-                className="bg-gray-300  px-2 py-1 rounded-lg  flex items-center gap-2 justify-center"
+                className="bg-gray-300/70 text-black  px-2 py-1 rounded-lg  flex items-center gap-2 justify-center"
               >
                 <p>{name}</p>
                 <button
@@ -100,7 +100,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
                       selectedNames.filter((item) => item !== name)
                     )
                   }
-                  className="bg-gray-600 text-white px-1 rounded"
+                  className="bg-gray-600/50 text-white px-[.4rem] rounded"
                 >
                   X
                 </button>
@@ -137,7 +137,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
               queryData.data?.results.map((result) => (
                 <li
                   key={result.id}
-                  className="border-y px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
+                  className="border-y border-gray-300 px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"
                   tabIndex={0}
                   onClick={() => handleCheckboxChange(result.name)}
                   onKeyDown={(e) => {

@@ -25,7 +25,6 @@ multi-select autocomplete component
 
 - Responsive Design
 - Multi Select functionality
-- Add new choosen and delete choosen character
 - Accesibility
 - Loading state
 - Error Handling
