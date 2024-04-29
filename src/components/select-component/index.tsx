@@ -90,24 +90,21 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
   const dropdownRef = useRef<HTMLUListElement>(null);
   const debounceScroll = useRef(
     debounce(() => {
-      if (!dropdownRef.current) return;
+      if (!dropdownRef.current || isFetching) return;
       const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current;
 
-      // Calculate how far the user has scrolled from the top of the dropdown
       const scrolledFromTop = scrollTop + clientHeight;
 
-      // Calculate the total height of the dropdown
       const totalHeight = scrollHeight;
 
-      // Calculate a threshold, for example, 80% of the total height
       const threshold = totalHeight * 0.8;
 
-      // If the user has scrolled past 80% of the total height, fetch the next page
       if (scrolledFromTop >= threshold) {
         setPageQuery((prev) => prev + 1);
+        setIsFetching(true);
       }
     }, 200)
-  ); // Adjust debounce delay as needed
+  );
 
   useEffect(() => {
     const dropdownElement = dropdownRef.current;
@@ -115,7 +112,6 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
       dropdownElement.addEventListener("scroll", debounceScroll.current);
     }
 
-    // Clean up the event listener when the component unmounts
     return () => {
       if (dropdownElement) {
         dropdownElement.removeEventListener("scroll", debounceScroll.current);
@@ -125,9 +121,17 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
 
   useEffect(() => {
     if (queryData.data?.results) {
+      const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current!;
+      const scrollPosition = scrollTop + clientHeight;
       setLocalCacheData((prevData) => [...prevData, ...queryData.data.results]);
+      setIsFetching(false);
+      if (scrollPosition < scrollHeight) {
+        dropdownRef.current?.scrollTo({ top: scrollPosition });
+      }
     }
   }, [queryData.data?.results]);
+
+  const [isFetching, setIsFetching] = useState(false);
 
   return (
     <div className="flex flex-col gap-1 text-gray-500">
