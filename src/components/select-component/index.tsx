@@ -1,16 +1,24 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import { IQueryData } from "../../types";
+import { IQueryData, IResult } from "../../types";
 import { useSearchParams } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa";
 import React, { useState, useEffect, useRef } from "react";
+import { debounce } from "lodash";
 import LoadingItem from "./components/loading";
 
-const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
+interface ISelectComponentProps {
+  queryData: UseQueryResult<IQueryData>;
+  setPageQuery: (page: number | ((prev: number) => number)) => void;
+}
+
+const SelectComponent: React.FC<ISelectComponentProps> = ({
   queryData,
+  setPageQuery,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(true);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
+  const [localCacheData, setLocalCacheData] = useState<IResult[]>([]);
   const containerRef = useRef(null);
 
   //dropdown menu logic
@@ -67,8 +75,59 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
 
   // search input logic
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({ name: e.target.value });
+    setPageQuery(1);
+    setLocalCacheData([]);
+
+    if (e.target.value === "") {
+      searchParams.delete("name");
+      setSearchParams(searchParams);
+    } else {
+      setSearchParams({ name: e.target.value });
+    }
   };
+
+  // infinite scroll logic
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const debounceScroll = useRef(
+    debounce(() => {
+      if (!dropdownRef.current) return;
+      const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current;
+
+      // Calculate how far the user has scrolled from the top of the dropdown
+      const scrolledFromTop = scrollTop + clientHeight;
+
+      // Calculate the total height of the dropdown
+      const totalHeight = scrollHeight;
+
+      // Calculate a threshold, for example, 80% of the total height
+      const threshold = totalHeight * 0.8;
+
+      // If the user has scrolled past 80% of the total height, fetch the next page
+      if (scrolledFromTop >= threshold) {
+        setPageQuery((prev) => prev + 1);
+      }
+    }, 200)
+  ); // Adjust debounce delay as needed
+
+  useEffect(() => {
+    const dropdownElement = dropdownRef.current;
+    if (dropdownElement) {
+      dropdownElement.addEventListener("scroll", debounceScroll.current);
+    }
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      if (dropdownElement) {
+        dropdownElement.removeEventListener("scroll", debounceScroll.current);
+      }
+    };
+  }, [localCacheData]);
+
+  useEffect(() => {
+    if (queryData.data?.results) {
+      setLocalCacheData((prevData) => [...prevData, ...queryData.data.results]);
+    }
+  }, [queryData.data?.results]);
 
   return (
     <div className="flex flex-col gap-1 text-gray-500">
@@ -126,7 +185,10 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
         </div>
         {/* drop down */}
         {isOpen && (
-          <ul className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 md:w-[30rem] w-full absolute bg-white ">
+          <ul
+            ref={dropdownRef}
+            className="border  border-gray-700 rounded-xl mt-2 overflow-y-auto max-h-80 md:w-[30rem] w-full absolute bg-white "
+          >
             {queryData.isLoading ? (
               [...Array(7)].map((_, i) => <LoadingItem key={i} />)
             ) : queryData.error ? (
@@ -134,7 +196,7 @@ const SelectComponent: React.FC<{ queryData: UseQueryResult<IQueryData> }> = ({
                 <p>Couldn't find any data</p>
               </li>
             ) : (
-              queryData.data?.results.map((result) => (
+              localCacheData?.map((result) => (
                 <li
                   key={result.id}
                   className="border-y border-gray-300 px-3 py-2 flex gap-3 items-center justify-start w-full cursor-pointer"

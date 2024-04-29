@@ -15,6 +15,8 @@ this is case project for Job application to AdCreative.ai
 - TypeScript
 - axios
 - react Query
+- lodash
+- redux
 - [Rick and Morty Api](https://rickandmortyapi.com/documentation/#introduction)
 
 ## Project Details
