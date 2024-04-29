@@ -19,6 +19,7 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [localCacheData, setLocalCacheData] = useState<IResult[]>([]);
+  const [maxPage, setMaxPage] = useState<number>(0);
   const containerRef = useRef(null);
 
   //dropdown menu logic
@@ -107,6 +108,8 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
   );
 
   useEffect(() => {
+    if (localCacheData.length / 20 + 1 > maxPage) return;
+
     const dropdownElement = dropdownRef.current;
     if (dropdownElement) {
       dropdownElement.addEventListener("scroll", debounceScroll.current);
@@ -117,9 +120,13 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
         dropdownElement.removeEventListener("scroll", debounceScroll.current);
       }
     };
-  }, [localCacheData]);
+  }, [localCacheData, maxPage]);
 
   useEffect(() => {
+    if (queryData.data?.info?.pages) {
+      setMaxPage(queryData.data.info.pages);
+    }
+
     if (queryData.data?.results) {
       const { scrollTop, scrollHeight, clientHeight } = dropdownRef.current!;
       const scrollPosition = scrollTop + clientHeight;
@@ -129,7 +136,7 @@ const SelectComponent: React.FC<ISelectComponentProps> = ({
         dropdownRef.current?.scrollTo({ top: scrollPosition });
       }
     }
-  }, [queryData.data?.results]);
+  }, [queryData.data]);
 
   const [isFetching, setIsFetching] = useState(false);
 
